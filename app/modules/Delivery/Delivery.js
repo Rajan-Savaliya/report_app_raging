@@ -12,7 +12,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { SafeView } from "./Home.Style.js";
 
 import { TabView } from "react-native-tab-view";
-import { getDeliveryAction } from "../../redux/actions/productActions.js";
+import { getWhisListData } from "../../redux/actions/productActions.js";
 
 import Spinner from "react-native-loading-spinner-overlay";
 
@@ -42,7 +42,7 @@ const Delivery = ({ navigation }) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      dispatch(getDeliveryAction());
+      dispatch(getWhisListData());
     });
 
     return unsubscribe;

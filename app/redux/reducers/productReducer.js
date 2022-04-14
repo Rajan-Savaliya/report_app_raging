@@ -85,9 +85,16 @@ import {
   GET_ONETIME_BOOKING_REPORT,
   GET_ONETIME_BOOKING_REPORT_ERROR,
   GET_ONETIME_BOOKING_REPORT_LOADING,
+  MAX_DEBIT_DATE,
+  LIKE_UNLIKE_DONE,
+  LIKE_UNLIKE_LOADING,
+  REMOVE_FROM_LIKE_LIST,
 } from "../actions/types";
 
 const initialState = {
+  likeUnlikeLoading: false,
+  maxDebit: false,
+  maxDays: false,
   totalDebit: 0,
   totalCredit: 0,
   selectPendingOrderState: false,
@@ -179,6 +186,47 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case LIKE_UNLIKE_LOADING:
+      return {
+        ...state,
+        likeUnlikeLoading: true,
+      };
+    case LIKE_UNLIKE_DONE:
+      return {
+        ...state,
+        likeUnlikeLoading: false,
+      };
+    case REMOVE_FROM_LIKE_LIST:
+      return {
+        ...state,
+        pendingDeliveryOrder: state.pendingDeliveryOrder.filter(
+          (item) => action.payloadUnLikeId != item.id
+        ),
+      };
+    case MAX_DEBIT_DATE:
+      var listOfItem = false;
+      if (action.payloadMaxDay) {
+        console.log("max day filter", state.totalCredit, state.totalDebit);
+        var listOfItem = state.cardItems;
+        listOfItem.sort(function compare(a, b) {
+          return b.only_day - a.only_day;
+        });
+      } else if (action.payloadMaxDbit) {
+        console.log("max debit filter", state.totalCredit, state.totalDebit);
+
+        var listOfItem = state.cardItems;
+
+        listOfItem.sort(function compare(a, b) {
+          return parseFloat(b.debit) - parseFloat(a.debit);
+        });
+      }
+
+      return {
+        ...state,
+        maxDebit: action.payloadMaxDbit,
+        maxDays: action.payloadMaxDay,
+        cardItems: listOfItem ? listOfItem : state.cardItems,
+      };
     case GET_PAYMENT_ITEMS_LOADING:
       return {
         ...state,
@@ -411,15 +459,17 @@ export default (state = initialState, action) => {
         // deliveryItems: [],
       };
     case GET_DELIVERY_ITEMS:
+      console.log(action.payload, "QQQQQQQQQQQ");
       return {
         ...state,
         deliveryItemsError: null,
         deliveryItemsLoading: false,
+        pendingDeliveryOrder: action.payload,
         // deliveryItems: action.payload,
-        pendingDeliveryOrder: action.payloadPending,
-        doneDeliveryOrder: action.payloadDone,
-        cancelDeliveryOrder: action.payloadCancel,
-        additionalDeliveryOrder: action.payloadAdditional,
+        // pendingDeliveryOrder: action.payloadPending,
+        // doneDeliveryOrder: action.payloadDone,
+        // cancelDeliveryOrder: action.payloadCancel,
+        // additionalDeliveryOrder: action.payloadAdditional,
       };
     case GET_DELIVERY_ITEMS_ERROR:
       return {
@@ -494,8 +544,8 @@ export default (state = initialState, action) => {
     case GET_CARD_ITEMS:
       return {
         ...state,
-        totalDebit: action.payloadTotalCardList,
-        totalCredit: action.payloadTotalDedit,
+        totalDebit: action.payloadTotalDedit,
+        totalCredit: action.payloadTotalCardList,
         cardItemsError: null,
         cardItemsLoading: false,
         cardItems: action.payloadCardList,
@@ -503,8 +553,8 @@ export default (state = initialState, action) => {
     case GET_CARD_ITEMS_ERROR:
       return {
         ...state,
-        totalDebit: action.payloadTotalCardList,
-        totalCredit: action.payloadTotalDedit,
+        totalDebit: action.payloadTotalDedit,
+        totalCredit: action.payloadTotalCardList,
         cardItemsLoading: false,
         cardItemsError: action.payload
           ? action.payload
@@ -519,6 +569,7 @@ export default (state = initialState, action) => {
         // customerItems: [],
       };
     case GET_CUSTOMER_ITEMS:
+      console.log(action.payloadCardList, "reducer customerList data");
       return {
         ...state,
         customerItemsError: null,

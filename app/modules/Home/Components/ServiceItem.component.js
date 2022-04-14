@@ -22,9 +22,11 @@ import {
   getCardItemsAction,
   getCustomerItemsAction,
   customerDeliveryDetailByID,
+  addRemoveLikeItemsAction,
 } from "../../../redux/actions/productActions";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const ServiceItem = ({ item, navigation }) => {
   const dispatch = useDispatch();
@@ -35,6 +37,7 @@ const ServiceItem = ({ item, navigation }) => {
     totalCredit,
     cardItemsError,
     customerItems,
+    pendingDeliveryOrder,
   } = useSelector((state) => state.productState);
 
   const callThePersonAction = () => {
@@ -77,21 +80,137 @@ const ServiceItem = ({ item, navigation }) => {
     }
   };
 
+  const hardIconComponent =
+    pendingDeliveryOrder &&
+    Array.isArray(pendingDeliveryOrder) &&
+    pendingDeliveryOrder.find(
+      (likeitemid) => likeitemid.customer_id == item.customer_id
+    ) ? (
+      <TouchableOpacity
+        onPress={() => {
+          console.log(pendingDeliveryOrder, "Remove to the whish list");
+          if (
+            pendingDeliveryOrder &&
+            Array.isArray(pendingDeliveryOrder) &&
+            pendingDeliveryOrder.find(
+              (valueData) => valueData.customer_id == item.customer_id
+            ) &&
+            pendingDeliveryOrder.find(
+              (valueData) => valueData.customer_id == item.customer_id
+            ).id
+          ) {
+            dispatch(
+              addRemoveLikeItemsAction(
+                item.customer_id,
+                pendingDeliveryOrder.find(
+                  (valueData) => valueData.customer_id == item.customer_id
+                ).id,
+                "unlike",
+                "",
+                ""
+              )
+            );
+          }
+          // callThePersonAction();
+          // navigation.navigate("AddService", {
+          //   id: item.id,
+          //   name: item.name,
+          //   description: item.description,
+          //   price: item.price,
+          //   image: item.image,
+          //   update: true,
+          // });
+        }}
+        style={{
+          zIndex: 5,
+          position: "absolute",
+          borderRadius: 50,
+          borderWidth: 1,
+          borderColor: "#ff3636",
+          padding: 5,
+          justifyContent: "center",
+          alignItems: "center",
+          right: "15%",
+          bottom: "10%",
+        }}
+      >
+        <MaterialCommunityIcons
+          name={true ? "cards-heart" : "cards-heart-outline"}
+          color={"#ff3636"}
+          size={18}
+        />
+      </TouchableOpacity>
+    ) : (
+      <TouchableOpacity
+        onPress={() => {
+          console.log(pendingDeliveryOrder, "add to the whish list");
+          dispatch(
+            addRemoveLikeItemsAction(
+              item.customer_id,
+              "",
+              "like",
+              "",
+              "2022-04-14"
+            )
+          );
+          // callThePersonAction();
+          // navigation.navigate("AddService", {
+          //   id: item.id,
+          //   name: item.name,
+          //   description: item.description,
+          //   price: item.price,
+          //   image: item.image,
+          //   update: true,
+          // });
+        }}
+        style={{
+          zIndex: 5,
+          position: "absolute",
+          borderRadius: 50,
+          borderWidth: 1,
+          borderColor: "#808080",
+          padding: 5,
+          justifyContent: "center",
+          alignItems: "center",
+          right: "15%",
+          bottom: "10%",
+        }}
+      >
+        <MaterialCommunityIcons
+          name={true ? "cards-heart" : "cards-heart-outline"}
+          color={"#808080"}
+          size={18}
+        />
+      </TouchableOpacity>
+    );
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={() => {
         let customerSelectionList = [];
 
-        customerItems.forEach((valueItemCustomer) => {
-          customerSelectionList.push({
-            label: valueItemCustomer.customer_name,
-            value: valueItemCustomer.customer_id,
+        console.log(customerItems);
+
+        customerItems &&
+          customerItems.forEach((valueItemCustomer) => {
+            customerSelectionList.push({
+              label: valueItemCustomer.customer_name,
+              value: valueItemCustomer.customer_id,
+            });
           });
-        });
+
+        console.log(
+          Moment().format("YYYY-MM-DD"),
+          item.customer_id ? item.customer_id : ""
+        );
 
         dispatch(
-          customerDeliveryDetailByID("", Moment().format("YYYY-MM-DD"), "24")
+          customerDeliveryDetailByID(
+            "",
+            Moment().format("YYYY-MM-DD"),
+            item.customer_id ? item.customer_id : ""
+          )
         );
         navigation.navigate("CustomerDeliveryDate", {
           customerId: item.customer_id,
@@ -208,6 +327,7 @@ const ServiceItem = ({ item, navigation }) => {
           </View>
         </View>
       </View>
+      {hardIconComponent}
       <TouchableOpacity
         onPress={() => {
           callThePersonAction();
@@ -225,7 +345,7 @@ const ServiceItem = ({ item, navigation }) => {
           position: "absolute",
           borderRadius: 50,
           borderWidth: 1,
-          borderColor: "#26c957",
+          borderColor: item.customer_mobile ? "#26c957" : "#808080",
           padding: 5,
           justifyContent: "center",
           alignItems: "center",
@@ -233,7 +353,11 @@ const ServiceItem = ({ item, navigation }) => {
           bottom: "10%",
         }}
       >
-        <MaterialIcons name={"call"} color="#26c957" size={18} />
+        <MaterialIcons
+          name={"call"}
+          color={item.customer_mobile ? "#26c957" : "#808080"}
+          size={18}
+        />
       </TouchableOpacity>
     </TouchableOpacity>
   );

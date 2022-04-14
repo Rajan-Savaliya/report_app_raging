@@ -96,7 +96,7 @@ const SignIn = ({ navigation }) => {
                 textAlign: "center",
                 fontSize: 25,
                 fontWeight: "bold",
-                color: "#26c957",
+                color: "#4287f5",
               }}
             >
               SIGN IN
@@ -160,7 +160,7 @@ const SignIn = ({ navigation }) => {
                         paddingHorizontal: 5,
                       }}
                     >
-                      <Ionicons name="person" color="#26c957" size={18} />
+                      <Ionicons name="person" color="#4287f5" size={18} />
                     </View>
 
                     <TextInput
@@ -252,7 +252,7 @@ const SignIn = ({ navigation }) => {
                           setPasswordHide((item) => !item);
                         }}
                         name={passwordHide ? "eye-off" : "eye"}
-                        color="#26c957"
+                        color="#4287f5"
                         size={18}
                       />
                     </View>
@@ -280,7 +280,7 @@ const SignIn = ({ navigation }) => {
                   >
                     <View
                       style={{
-                        backgroundColor: "#26c957",
+                        backgroundColor: "#4287f5",
                         marginTop: 30,
                         justifyContent: "center",
                         alignItems: "center",

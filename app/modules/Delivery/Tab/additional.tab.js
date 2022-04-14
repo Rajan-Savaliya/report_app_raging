@@ -14,7 +14,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { FAB } from "react-native-paper";
 
 import DeliveryItem from "../Components/DeliveryItem.component";
-import { getDeliveryAction } from "../../../redux/actions/productActions";
+import { getWhisListData } from "../../../redux/actions/productActions";
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout));
 };
@@ -24,7 +24,7 @@ const AdditionalTab = ({ navigation }) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    dispatch(getDeliveryAction());
+    dispatch(getWhisListData());
     wait(1000).then(() => {
       setRefreshing(false);
     });

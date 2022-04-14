@@ -51,10 +51,38 @@ apk create kari send karvani che: ok ok ok:
 ----7> search default id set kareli che te remove kari devani che: navigation to report page method ma:
 
 Task of what to done for the day: ok:
-1> color: skyblue
+-------1> color: skyblue
 2> home page filter: max by debit / max by days [filter data]: [max to low]
 3> whish list modal ==> : date / custmerId / remak
-4> default date: , that remove karvanu che:
-5> navigation customer screen==> home to customer screen: data proepr set nathi: search ma proepr aave che:
+-------4> default date: , that remove karvanu che:
+-------5> navigation customer screen==> home to customer screen: data proepr set nathi: search ma proepr aave che:
 6> whish list today date===> color change
 7> customeId page: ==> diff form color diff set kari de: ok : ok : ok :
+-------8> phone number====> button color disable karvo
+
+x.sort(function compare(a, b) {
+return b.only_day - a.only_day;
+});
+
+x.sort(function compare(a, b) {
+if (a.debit && b.debit) {
+return parseFloat(b.debit) - parseFloat(a.debit);
+}
+});
+
+console.log(x);
+
+// like item:
+like add and remove set kari: method + api thi:
+// like item like show up karishu: ok:
+
+Task:
+
+// like item get kari show karvani che: 30min
+// add mate modal open karvanu che: 30min
+// whish list and diff list color diff check karvano
+[whish now day product and all diff type customer list]
+// token invalida request send karvani che:
+// test kari build kari send karvanu che:
+
+// 2 hours done thai jai ok ok:

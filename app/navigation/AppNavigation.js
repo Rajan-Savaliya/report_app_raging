@@ -32,6 +32,7 @@ import PdfView from "../modules/PdfView/PdfView";
 import {
   getCustomerItemsAction,
   getCardItemsAction,
+  getWhisListData,
 } from "../redux/actions/productActions";
 
 const Stack = createStackNavigator();
@@ -41,10 +42,12 @@ const AppNavigation = () => {
   const { bgColorset } = useSelector((state) => state.themeState);
   const { userToken } = useSelector((state) => state.authState);
 
+  console.log(userToken, "UserToken");
   useEffect(() => {
     if (userToken) {
-      dispatch(getCustomerItemsAction());
+      // dispatch(getCustomerItemsAction());
       dispatch(getCardItemsAction());
+      // dispatch(getWhisListData());
     }
   }, [userToken]);
 

@@ -11,6 +11,8 @@ import {
   TouchableOpacity,
   RefreshControl,
   ScrollView,
+  TouchableWithoutFeedback,
+  TouchableNativeFeedback,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import FastImage from "react-native-fast-image";
@@ -29,6 +31,8 @@ import {
   getCardItemsAction,
   getCustomerItemsAction,
   prodcutDataLogOut,
+  reportItemSelection,
+  getWhisListData,
 } from "../../redux/actions/productActions.js";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -52,6 +56,9 @@ const Home = ({ navigation }) => {
     totalCredit,
     cardItemsError,
     cardItemsLoading,
+    maxDebit,
+    maxDays,
+    pendingDeliveryOrder,
   } = useSelector((state) => state.productState);
 
   // useEffect(() => {
@@ -64,43 +71,25 @@ const Home = ({ navigation }) => {
   // }, [navigation]);
 
   useEffect(() => {
-    dispatch(getCardItemsAction());
-    dispatch(getCustomerItemsAction());
-
+    // dispatch(getCardItemsAction());
     // dispatch(getCustomerItemsAction());
+    // dispatch(getWhisListData());
   }, []);
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
 
-  const onRefresh = React.useCallback(() => {
+  const onRefresh = () => {
+    console.log("use callback runing");
     setRefreshing(true);
     dispatch(getCardItemsAction());
-    dispatch(getCustomerItemsAction());
+    // dispatch(getCustomerItemsAction());
+    dispatch(getWhisListData());
 
     wait(1000).then(() => setRefreshing(false));
-  }, []);
+  };
 
   const [text1, onChangeText1] = useState("OUR COLLECTION");
-
-  const SilderItem = ({ item }) => (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        backgroundColor: "transparent",
-      }}
-    >
-      <FastImage
-        style={{ width, flex: 1 }}
-        source={{
-          uri: item.image,
-          priority: FastImage.priority.high,
-        }}
-        resizeMode={FastImage.resizeMode.stretch}
-      />
-    </View>
-  );
 
   const renderCardItem = ({ item }) => {
     return <ServiceItem navigation={navigation} item={item} />;
@@ -108,7 +97,7 @@ const Home = ({ navigation }) => {
 
   return (
     <SafeView bgColor={"#FFFFFF"}>
-      <StatusBar backgroundColor={"#26c957"} barStyle="light-content" />
+      <StatusBar backgroundColor={"#4287f5"} barStyle="light-content" />
       <Spinner
         visible={loadingSpinner}
         textContent={"Loading..."}
@@ -127,7 +116,7 @@ const Home = ({ navigation }) => {
           shadowOpacity: 0.5,
           shadowRadius: 2,
           elevation: 8,
-          backgroundColor: "#26c957",
+          backgroundColor: "#4287f5",
           flexDirection: "row",
         }}
       >
@@ -142,6 +131,7 @@ const Home = ({ navigation }) => {
         </View>
         <TouchableOpacity
           onPress={() => {
+            // console.log(pendingDeliveryOrder);
             dispatch(prodcutDataLogOut());
           }}
           style={{ left: -15 }}
@@ -158,7 +148,7 @@ const Home = ({ navigation }) => {
             flex: 1,
           }}
         >
-          <ActivityIndicator size={40} color="#26c957" />
+          <ActivityIndicator size={40} color="#4287f5" />
           <View style={{ marginTop: 10 }}>
             <Text style={{ color: "#000000", fontSize: 17 }}>Loading</Text>
           </View>
@@ -178,10 +168,10 @@ const Home = ({ navigation }) => {
         >
           <View
             style={{
-              marginTop: 10,
+              // marginTop: 10,
               justifyContent: "center",
               alignItems: "center",
-              marginTop: Dimensions.get("window").height / 2.4,
+              marginTop: Dimensions.get("window").height / 2.8,
             }}
           >
             {Array.isArray(cardItems) && cardItems.length === 0 ? (
@@ -196,7 +186,7 @@ const Home = ({ navigation }) => {
                   source={require("../../assets/work.jpg")}
                 />
                 <View>
-                  <Text style={{ top: 10, color: "#000000", fontSize: 17 }}>
+                  <Text style={{ color: "#000000", fontSize: 17 }}>
                     No Service Found
                   </Text>
                 </View>
@@ -210,6 +200,93 @@ const Home = ({ navigation }) => {
         </ScrollView>
       ) : (
         <>
+          <View
+            style={{
+              marginTop: 3,
+              // marginHorizontal: 5,
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              // flex: 1,
+              // marginHorizontal: 5,
+              // width: "100%",
+            }}
+          >
+            <View
+              style={{
+                overflow: "hidden",
+                borderRadius: 5,
+                elevation: 2,
+                borderColor: "#FFFFFF",
+              }}
+            >
+              <TouchableNativeFeedback
+                onPress={() => {
+                  dispatch(reportItemSelection(maxDebit, "debit"));
+                }}
+              >
+                <View
+                  style={{
+                    overflow: "hidden",
+                    width: Dimensions.get("window").width / 2 - 20,
+                    // flex: 0.5,
+                    // marginHorizontal: 10,
+                    backgroundColor: maxDebit ? "#4287f5" : "#FFFFFF",
+                    paddingHorizontal: 30,
+                    paddingVertical: 13,
+                    alignItems: "center",
+                    borderRadius: 5,
+                    borderWidth: 3,
+                    elevation: 3,
+                    borderColor: "#FFFFFF",
+                  }}
+                >
+                  <View>
+                    <Text style={{ color: maxDebit ? "#FFFFFF" : "#4287f5" }}>
+                      Max Dedit
+                    </Text>
+                  </View>
+                </View>
+              </TouchableNativeFeedback>
+            </View>
+
+            <View
+              style={{
+                overflow: "hidden",
+                borderRadius: 5,
+                elevation: 2,
+                borderColor: "#FFFFFF",
+              }}
+            >
+              <TouchableNativeFeedback
+                onPress={() => {
+                  dispatch(reportItemSelection(maxDays, "date"));
+                }}
+              >
+                <View
+                  style={{
+                    overflow: "hidden",
+                    width: Dimensions.get("window").width / 2 - 20,
+                    // flex: 0.5,
+                    // marginHorizontal: 10,
+                    borderWidth: 3,
+                    backgroundColor: maxDays ? "#4287f5" : "#FFFFFF",
+                    paddingHorizontal: 30,
+                    paddingVertical: 13,
+                    alignItems: "center",
+                    borderRadius: 5,
+                    elevation: 3,
+                    borderColor: "#FFFFFF",
+                  }}
+                >
+                  <View>
+                    <Text style={{ color: maxDays ? "#FFFFFF" : "#4287f5" }}>
+                      Max Date
+                    </Text>
+                  </View>
+                </View>
+              </TouchableNativeFeedback>
+            </View>
+          </View>
           <FlatList
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

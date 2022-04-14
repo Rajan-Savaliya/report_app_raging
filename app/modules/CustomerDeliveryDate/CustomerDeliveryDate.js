@@ -125,7 +125,7 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
 
   return (
     <SafeView bgColor={"#FFFFFF"}>
-      <StatusBar backgroundColor={"#26c957"} barStyle="light-content" />
+      <StatusBar backgroundColor={"#4287f5"} barStyle="light-content" />
       <Spinner
         visible={false}
         textContent={"Loading..."}
@@ -149,17 +149,20 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
 
           const stateSelectionDate = stateDate
             ? stateDate.split("-").reverse().join("-")
-            : Moment().format("YYYY-MM-DD");
+            : "-";
           const endSelectionDate = endDate
             ? endDate.split("-").reverse().join("-")
             : Moment().format("YYYY-MM-DD");
 
+          console.log(
+            `https://nt.dhyatiktok.com/ntapi/home/get_account_ledger_pdf/${stateSelectionDate}/${endSelectionDate}/${customerIdForRequest}`
+          );
           navigation.navigate("PdfView", {
             item: {},
             pdfUrl: `https://nt.dhyatiktok.com/ntapi/home/get_account_ledger_pdf/${stateSelectionDate}/${endSelectionDate}/${customerIdForRequest}`,
           });
         }}
-        righticonColor={"#26c957"}
+        righticonColor={"#4287f5"}
         hide={false}
       />
       {showDatePicker ? (
@@ -248,12 +251,12 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
             paddingHorizontal: 8,
             borderRadius: 3,
             borderBottomWidth: 3,
-            borderColor: "#26c957",
+            borderColor: "#4287f5",
           }}
         >
           <View style={{ flexDirection: "row" }}>
             <View style={{ alignSelf: "flex-end", paddingRight: 7 }}>
-              <Feather name="calendar" color="#26c957" size={18} />
+              <Feather name="calendar" color="#4287f5" size={18} />
             </View>
             <View>
               <View>
@@ -298,12 +301,12 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
             paddingHorizontal: 8,
             borderRadius: 3,
             borderBottomWidth: 3,
-            borderColor: "#26c957",
+            borderColor: "#4287f5",
           }}
         >
           <View style={{ flexDirection: "row" }}>
             <View style={{ alignSelf: "flex-end", paddingRight: 7 }}>
-              <Feather name="calendar" color="#26c957" size={18} />
+              <Feather name="calendar" color="#4287f5" size={18} />
             </View>
             <View>
               <View>
@@ -331,7 +334,7 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
           }}
           style={{
             padding: 15,
-            backgroundColor: "#26c957",
+            backgroundColor: "#4287f5",
             borderRadius: 50,
           }}
         >
@@ -352,7 +355,7 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
             flex: 1,
           }}
         >
-          <ActivityIndicator size={40} color="#26c957" />
+          <ActivityIndicator size={40} color="#4287f5" />
           <View style={{ marginTop: 10 }}>
             <Text style={{ color: "#000000", fontSize: 17 }}>Loading</Text>
           </View>
@@ -456,7 +459,7 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
                   style={{
                     paddingVertical: 0.2,
                     elevation: 0.1,
-                    backgroundColor: "#26c957",
+                    backgroundColor: "#4287f5",
                     width: "100%",
                     marginTop: 5,
                   }}
@@ -500,7 +503,7 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
                   style={{
                     paddingVertical: 0.2,
                     elevation: 0.1,
-                    backgroundColor: "#26c957",
+                    backgroundColor: "#4287f5",
                     width: "100%",
                     marginTop: 5,
                   }}
@@ -544,7 +547,7 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
                   style={{
                     paddingVertical: 0.2,
                     elevation: 0.1,
-                    backgroundColor: "#26c957",
+                    backgroundColor: "#4287f5",
                     width: "100%",
                     marginTop: 5,
                   }}
@@ -571,7 +574,7 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
                   <View>
                     <Text
                       style={{
-                        color: "#26c957",
+                        color: "#4287f5",
                         fontSize: 13,
                       }}
                     >
@@ -585,7 +588,7 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
                   style={{
                     paddingVertical: 0.2,
                     elevation: 0.1,
-                    backgroundColor: "#26c957",
+                    backgroundColor: "#4287f5",
                     width: "100%",
                     marginTop: 5,
                   }}
@@ -625,7 +628,7 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
                   style={{
                     paddingVertical: 0.2,
                     elevation: 0.1,
-                    backgroundColor: "#26c957",
+                    backgroundColor: "#4287f5",
                     width: "100%",
                     marginTop: 5,
                   }}
@@ -648,7 +651,7 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
           />
           <FAB
             style={{
-              backgroundColor: "#26c957",
+              backgroundColor: "#4287f5",
               position: "absolute",
               margin: 16,
               right: 0,

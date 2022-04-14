@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import DeliveryItem from "../Components/DeliveryItem.component";
 import {
-  getDeliveryAction,
+  getWhisListData,
   pendingOrderStateSelection,
   setDeliveryStatus,
   removeSelectionListDeliveyAction,
@@ -31,7 +31,7 @@ const PendingTab = ({ navigation }) => {
   const [refreshing, setRefreshing] = React.useState(false);
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    dispatch(getDeliveryAction());
+    dispatch(getWhisListData());
     wait(1000).then(() => {
       setRefreshing(false);
     });

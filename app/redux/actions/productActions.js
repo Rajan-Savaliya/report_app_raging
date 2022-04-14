@@ -87,7 +87,115 @@ import {
   GET_ONETIME_BOOKING_REPORT,
   GET_ONETIME_BOOKING_REPORT_ERROR,
   GET_ONETIME_BOOKING_REPORT_LOADING,
+  MAX_DEBIT_DATE,
+  LIKE_UNLIKE_LOADING,
+  LIKE_UNLIKE_DONE,
+  REMOVE_FROM_LIKE_LIST,
 } from "./types";
+
+export const addRemoveLikeItemsAction =
+  (customerId = "", whishListId = "", type = "like", remark = "", date = "") =>
+  async (dispatch, getState) => {
+    dispatch({
+      type: LIKE_UNLIKE_LOADING,
+    });
+
+    if (type === "unlike") {
+      dispatch({
+        type: REMOVE_FROM_LIKE_LIST,
+        payloadUnLikeId: whishListId,
+      });
+      var data = JSON.stringify({
+        wishlist_id: whishListId ? parseInt(whishListId) : "",
+      });
+    } else if (type === "like") {
+      var data = JSON.stringify({
+        customer_id: customerId ? parseInt(customerId) : "",
+        date: date,
+        remark: remark,
+      });
+    }
+
+    try {
+      const {
+        authState: { userToken },
+      } = getState();
+
+      const likeUnlikeUrl =
+        type === "like"
+          ? "https://nt.dhyatiktok.com/ntapi/home/addwishlist"
+          : "https://nt.dhyatiktok.com/ntapi/home/removelist";
+
+      var config = {
+        method: "post",
+        url: likeUnlikeUrl,
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          "Content-Type": "application/json",
+        },
+        data: data,
+      };
+
+      console.log(data, "datadatadata");
+
+      axios(config)
+        .then(function (response) {
+          // if (
+          //   response &&
+          //   response.data &&
+          //   response.data.msg &&
+          //   response.data.status === false &&
+          //   response.data.msg.includes("Invalid Token")
+          // ) {
+          //   dispatch(LogOutAction());
+          // }
+
+          alert(JSON.stringify(response.data));
+
+          if (response && response.data && response.data.success) {
+            if (type === "like") {
+              dispatch(getWhisListData());
+            }
+            Toast.show({
+              text1:
+                type === "like"
+                  ? "Item successfully added into wishlist"
+                  : "Item successfully removed from wishlist",
+              visibilityTime: 15000,
+              autoHide: true,
+              position: "bottom",
+              type: "success",
+            });
+            dispatch({
+              type: LIKE_UNLIKE_DONE,
+            });
+          } else {
+            Toast.show({
+              text1: "something is wrong",
+              visibilityTime: 15000,
+              autoHide: true,
+              position: "bottom",
+              type: "error",
+            });
+            dispatch({
+              type: LIKE_UNLIKE_DONE,
+            });
+          }
+        })
+        .catch(function (error) {
+          Toast.show({
+            text1: "something is wrong",
+            visibilityTime: 15000,
+            autoHide: true,
+            position: "bottom",
+            type: "error",
+          });
+          dispatch({
+            type: LIKE_UNLIKE_DONE,
+          });
+        });
+    } catch (e) {}
+  };
 
 export const getBackgrounfDeliveryAction = () => async (dispatch, getState) => {
   try {
@@ -248,6 +356,34 @@ export const removeSelectionListDeliveyAction = () => (dispatch) => {
     type: REMOVE_SELECTION_PENDING_LIST,
   });
 };
+
+export const reportItemSelection =
+  (beforeData, type = "debit") =>
+  (dispatch) => {
+    // type -- debit / date
+
+    if (type == "debit") {
+      if (beforeData) {
+        return;
+      } else {
+        var maxDebit = beforeData ? false : true;
+        var maxDays = maxDebit ? false : true;
+      }
+    } else if (type == "date") {
+      if (beforeData) {
+        return;
+      } else {
+        var maxDays = beforeData ? false : true;
+        var maxDebit = maxDays ? false : true;
+      }
+    }
+
+    dispatch({
+      type: MAX_DEBIT_DATE,
+      payloadMaxDay: maxDays,
+      payloadMaxDbit: maxDebit,
+    });
+  };
 
 export const pendingOrderStateSelection =
   (value = false) =>
@@ -1029,6 +1165,8 @@ export const customerDeliveryDetailByID =
       authState: { userToken },
     } = getState();
 
+    console.log(userToken, "TOKEN=======================");
+
     var data = JSON.stringify({
       from: stateDate,
       to: endDate,
@@ -1080,7 +1218,7 @@ export const customerDeliveryDetailByID =
             text1: "Successfully get a customer report data",
             visibilityTime: 15000,
             autoHide: true,
-            position: "top",
+            position: "bottom",
             type: "success",
           });
         } else {
@@ -1109,6 +1247,7 @@ export const getCardItemsAction = () => async (dispatch, getState) => {
   try {
     const {
       authState: { userToken, userServiceType },
+      productState: { maxDebit, maxDays },
     } = getState();
 
     var config = {
@@ -1127,9 +1266,21 @@ export const getCardItemsAction = () => async (dispatch, getState) => {
           Array.isArray(response.data.data) &&
           response.data.data.length > 0
         ) {
+          var reportListData = response.data.data ? response.data.data : [];
+
+          if (maxDebit) {
+            reportListData.sort(function compare(a, b) {
+              return parseFloat(b.debit) - parseFloat(a.debit);
+            });
+          } else if (maxDays) {
+            reportListData.sort(function compare(a, b) {
+              return b.only_day - a.only_day;
+            });
+          }
+
           dispatch({
             type: GET_CARD_ITEMS,
-            payloadCardList: response.data.data ? response.data.data : [],
+            payloadCardList: reportListData,
             payloadTotalCardList:
               response.data.totalcredit || response.data.totalcredit == 0
                 ? response.data.totalcredit
@@ -1246,7 +1397,7 @@ export const getBookingAction = () => async (dispatch, getState) => {
   } catch (e) {}
 };
 
-export const getDeliveryAction = () => async (dispatch, getState) => {
+export const getWhisListData = () => async (dispatch, getState) => {
   dispatch({
     type: GET_DELIVERY_ITEMS_LOADING,
   });
@@ -1256,23 +1407,16 @@ export const getDeliveryAction = () => async (dispatch, getState) => {
       authState: { userToken },
     } = getState();
 
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${userToken}`);
-
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow",
+    var config = {
+      method: "get",
+      url: "https://nt.dhyatiktok.com/ntapi/home/whishlist",
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
     };
 
-    fetch(
-      "https://rd.ragingdevelopers.com/atender/api/delivery",
-      requestOptions
-    )
-      .then((response) => response.text())
-      .then((result) => {
-        let response = JSON.parse(result);
-
+    axios(config)
+      .then(function (response) {
         // if (
         //   response &&
         //   response.success == 0 &&
@@ -1281,43 +1425,20 @@ export const getDeliveryAction = () => async (dispatch, getState) => {
         //   dispatch(prodcutDataLogOut());
         // }
 
-        if (response.success) {
+        if (response.data.success) {
+          console.log(response.data.data, "1111111111111111111111111");
           dispatch({
             type: GET_DELIVERY_ITEMS,
-            payloadPending:
-              response.data &&
-              response.data.pending &&
-              Array.isArray(response.data.pending) &&
-              response.data.pending.length > 0
-                ? response.data.pending
-                : [],
-            payloadDone:
-              response.data &&
-              response.data.delivered &&
-              Array.isArray(response.data.delivered) &&
-              response.data.delivered.length > 0
-                ? response.data.delivered
-                : [],
-            payloadCancel:
-              response.data &&
-              response.data.cancelled &&
-              Array.isArray(response.data.cancelled) &&
-              response.data.cancelled.length > 0
-                ? response.data.cancelled
-                : [],
-            payloadAdditional:
-              response.data &&
-              response.data.additional &&
-              Array.isArray(response.data.additional) &&
-              response.data.additional.length > 0
-                ? response.data.additional
+            payload:
+              response.data.data && Array.isArray(response.data.data)
+                ? response.data.data
                 : [],
           });
         } else {
           dispatch({
             type: GET_DELIVERY_ITEMS_ERROR,
-            payload: response.message
-              ? response.message
+            payload: response.data.message
+              ? response.data.message
               : "server response failed",
           });
         }
@@ -1479,6 +1600,10 @@ export const getCustomerItemsAction = () => async (dispatch, getState) => {
     axios(config)
       .then(function (response) {
         if (response.data && response.data.customers) {
+          console.log(
+            response.data.customers,
+            "CUSTOMER ACTION METHOD RESPONSSE"
+          );
           dispatch({
             type: GET_CUSTOMER_ITEMS,
             payloadCardList:
@@ -1859,91 +1984,6 @@ export const getLikeCardItemsAction = () => async (dispatch, getState) => {
       });
   } catch (e) {}
 };
-
-export const addRemoveLikeItemsAction =
-  (projectId, type = "like") =>
-  async (dispatch, getState) => {
-    dispatch({
-      type: LIKE_UNLIKE_SERVER_SIDE_LOADING,
-    });
-
-    if (type === "like") {
-      dispatch({
-        type: LIKE_ITEM_VALUE_ADD,
-        payloadLikeId: projectId,
-      });
-    } else if (type === "unlike") {
-      dispatch({
-        type: UNLIKE_ITEM_VALUE_REMOVE,
-        payloadUnLikeId: projectId,
-      });
-    }
-
-    try {
-      const {
-        authState: { userToken },
-      } = getState();
-
-      var dataObj = JSON.stringify({ id: projectId });
-
-      const likeUnlikeUrl =
-        type === "like"
-          ? "https://avgl.in/avira9api/home/add_wishlist"
-          : "https://avgl.in/avira9api/home/remove_wishlist";
-
-      var config = {
-        method: "post",
-        url: likeUnlikeUrl,
-        headers: {
-          "If-Range": userToken,
-          "Content-Type": "application/json",
-        },
-        data: dataObj,
-      };
-
-      axios(config)
-        .then(function (response) {
-          if (response && response.data && response.data.status) {
-            Toast.show({
-              text1:
-                type === "like"
-                  ? "Item successfully added into wishlist"
-                  : "Item successfully removed from wishlist",
-              visibilityTime: 15000,
-              autoHide: true,
-              position: "top",
-              type: "success",
-            });
-            dispatch({
-              type: LIKE_UNLIKE_SERVER_SIDE_ERROR_DONE,
-            });
-          } else {
-            Toast.show({
-              text1: "something is wrong",
-              visibilityTime: 15000,
-              autoHide: true,
-              position: "top",
-              type: "error",
-            });
-            dispatch({
-              type: LIKE_UNLIKE_SERVER_SIDE_ERROR_DONE,
-            });
-          }
-        })
-        .catch(function (error) {
-          Toast.show({
-            text1: "something is wrong",
-            visibilityTime: 15000,
-            autoHide: true,
-            position: "top",
-            type: "error",
-          });
-          dispatch({
-            type: LIKE_UNLIKE_SERVER_SIDE_ERROR_DONE,
-          });
-        });
-    } catch (e) {}
-  };
 
 // list of order get
 

@@ -155,7 +155,7 @@ const PdfView = ({ navigation, route }) => {
           paddingLeft: 15,
           paddingVertical: 10,
           backgroundColor: "#FFFFFF",
-          borderBottomColor: "#26c957",
+          borderBottomColor: "#4287f5",
           borderBottomWidth: 0.2,
           flexDirection: "row",
           justifyContent: "space-between",
@@ -167,11 +167,11 @@ const PdfView = ({ navigation, route }) => {
           }}
           style={{ flexDirection: "row", alignItems: "center" }}
         >
-          <Ionicons name="caret-back" size={20} color={"#26c957"} />
+          <Ionicons name="caret-back" size={20} color={"#4287f5"} />
 
           <View>
             <Text
-              style={{ color: "#26c957", fontWeight: "normal", fontSize: 19 }}
+              style={{ color: "#4287f5", fontWeight: "normal", fontSize: 19 }}
             >
               ORDER PDF
             </Text>
@@ -184,7 +184,7 @@ const PdfView = ({ navigation, route }) => {
               actualDownload();
             }}
           >
-            <MaterialIcons color="#26c957" name="file-download" size={30} />
+            <MaterialIcons color="#4287f5" name="file-download" size={30} />
           </TouchableOpacity>
           <TouchableOpacity
             style={{ marginRight: 15, marginLeft: 10 }}
@@ -244,7 +244,7 @@ const PdfView = ({ navigation, route }) => {
               });
             }}
           >
-            <MaterialCommunityIcons color="#26c957" name="share" size={30} />
+            <MaterialCommunityIcons color="#4287f5" name="share" size={30} />
           </TouchableOpacity>
         </View>
       </View>

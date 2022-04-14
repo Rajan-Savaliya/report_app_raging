@@ -150,7 +150,7 @@ const DeliveryItem = ({ item, navigation }) => {
             position: "absolute",
             borderRadius: 50,
             // borderWidth: 1,
-            borderColor: "#26c957",
+            borderColor: "#4287f5",
             padding: 5,
             justifyContent: "center",
             alignItems: "center",
@@ -160,7 +160,7 @@ const DeliveryItem = ({ item, navigation }) => {
         >
           <MaterialCommunityIcons
             name={"file-pdf-box"}
-            color="#26c957"
+            color="#4287f5"
             size={25}
           />
         </TouchableOpacity>
