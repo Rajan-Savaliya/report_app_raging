@@ -91,7 +91,26 @@ import {
   LIKE_UNLIKE_LOADING,
   LIKE_UNLIKE_DONE,
   REMOVE_FROM_LIKE_LIST,
+  ADD_TO_WHISH_LIST_MODAL,
+  GET_FILTER_DATA,
 } from "./types";
+
+export const addWhishListModalAction =
+  (show = false, id = "") =>
+  (dispatch) => {
+    dispatch({
+      type: ADD_TO_WHISH_LIST_MODAL,
+      payloadShow: show,
+      payloadId: id,
+    });
+  };
+
+export const searchInputList = (textSearch) => (dispatch) => {
+  dispatch({
+    type: GET_FILTER_DATA,
+    payloadSearchText: textSearch,
+  });
+};
 
 export const addRemoveLikeItemsAction =
   (customerId = "", whishListId = "", type = "like", remark = "", date = "") =>
@@ -101,10 +120,6 @@ export const addRemoveLikeItemsAction =
     });
 
     if (type === "unlike") {
-      dispatch({
-        type: REMOVE_FROM_LIKE_LIST,
-        payloadUnLikeId: whishListId,
-      });
       var data = JSON.stringify({
         wishlist_id: whishListId ? parseInt(whishListId) : "",
       });
@@ -136,8 +151,6 @@ export const addRemoveLikeItemsAction =
         data: data,
       };
 
-      console.log(data, "datadatadata");
-
       axios(config)
         .then(function (response) {
           // if (
@@ -150,11 +163,14 @@ export const addRemoveLikeItemsAction =
           //   dispatch(LogOutAction());
           // }
 
-          alert(JSON.stringify(response.data));
-
           if (response && response.data && response.data.success) {
             if (type === "like") {
               dispatch(getWhisListData());
+            } else if (type === "unlike") {
+              dispatch({
+                type: REMOVE_FROM_LIKE_LIST,
+                payloadUnLikeId: whishListId,
+              });
             }
             Toast.show({
               text1:
@@ -1159,13 +1175,9 @@ export const customerDeliveryDetailByID =
       type: CUSTOMER_DELIVERY_DETAILS_LOADING,
     });
 
-    console.log(stateDate, endDate, customerId);
-
     const {
       authState: { userToken },
     } = getState();
-
-    console.log(userToken, "TOKEN=======================");
 
     var data = JSON.stringify({
       from: stateDate,
@@ -1199,13 +1211,13 @@ export const customerDeliveryDetailByID =
 
     axios(config)
       .then(function (response) {
-        // if (
-        //   response &&
-        //   response.success == 0 &&
-        //   response.message.includes("Invalid Api Token")
-        // ) {
-        //   dispatch(prodcutDataLogOut());
-        // }
+        if (
+          response.data &&
+          response.data.status == false &&
+          response.data.message.includes("Unauthorized")
+        ) {
+          dispatch(prodcutDataLogOut());
+        }
         var serverReponseData = response.data;
 
         if (serverReponseData) {
@@ -1232,6 +1244,14 @@ export const customerDeliveryDetailByID =
         }
       })
       .catch((error) => {
+        if (
+          error &&
+          error.message &&
+          error.message.includes("Request failed with status code 401")
+        ) {
+          dispatch(prodcutDataLogOut());
+        }
+
         dispatch({
           type: CUSTOMER_DELIVERY_DETAILS_ERROR,
           payload: "server response failed",
@@ -1260,6 +1280,14 @@ export const getCardItemsAction = () => async (dispatch, getState) => {
 
     axios(config)
       .then(function (response) {
+        if (
+          response.data &&
+          response.data.status == false &&
+          response.data.message.includes("Unauthorized")
+        ) {
+          dispatch(prodcutDataLogOut());
+        }
+
         if (
           response.data &&
           response.data.data &&
@@ -1294,9 +1322,13 @@ export const getCardItemsAction = () => async (dispatch, getState) => {
           dispatch({
             type: GET_CARD_ITEMS_ERROR,
             payload:
-              response.data && response.data.message
+              response.data.data &&
+              Array.isArray(response.data.data) &&
+              response.data.data.length == 0
+                ? "No data found!"
+                : response.data && response.data.message
                 ? response.data.message
-                : "server response failed",
+                : "something went wrong try again",
             payloadTotalCardList:
               response.data.totalcredit || response.data.totalcredit == 0
                 ? response.data.totalcredit
@@ -1309,6 +1341,21 @@ export const getCardItemsAction = () => async (dispatch, getState) => {
         }
       })
       .catch(function (error) {
+        if (
+          error &&
+          error.message &&
+          error.message.includes("Request failed with status code 401")
+        ) {
+          dispatch(prodcutDataLogOut());
+        }
+
+        if (
+          error &&
+          error.message &&
+          error.message.includes("Request failed with status code 401")
+        ) {
+          dispatch(prodcutDataLogOut());
+        }
         dispatch({
           type: GET_CARD_ITEMS_ERROR,
           payload: "server response failed",
@@ -1417,16 +1464,15 @@ export const getWhisListData = () => async (dispatch, getState) => {
 
     axios(config)
       .then(function (response) {
-        // if (
-        //   response &&
-        //   response.success == 0 &&
-        //   response.message.includes("Invalid Api Token")
-        // ) {
-        //   dispatch(prodcutDataLogOut());
-        // }
+        if (
+          response.data &&
+          response.data.status == false &&
+          response.data.message.includes("Unauthorized")
+        ) {
+          dispatch(prodcutDataLogOut());
+        }
 
         if (response.data.success) {
-          console.log(response.data.data, "1111111111111111111111111");
           dispatch({
             type: GET_DELIVERY_ITEMS,
             payload:
@@ -1444,6 +1490,14 @@ export const getWhisListData = () => async (dispatch, getState) => {
         }
       })
       .catch((error) => {
+        if (
+          error &&
+          error.message &&
+          error.message.includes("Request failed with status code 401")
+        ) {
+          dispatch(prodcutDataLogOut());
+        }
+
         dispatch({
           type: GET_DELIVERY_ITEMS_ERROR,
           payload: "server response failed",
@@ -1599,11 +1653,15 @@ export const getCustomerItemsAction = () => async (dispatch, getState) => {
 
     axios(config)
       .then(function (response) {
+        if (
+          response.data &&
+          response.data.status == false &&
+          response.data.message.includes("Unauthorized")
+        ) {
+          dispatch(prodcutDataLogOut());
+        }
+
         if (response.data && response.data.customers) {
-          console.log(
-            response.data.customers,
-            "CUSTOMER ACTION METHOD RESPONSSE"
-          );
           dispatch({
             type: GET_CUSTOMER_ITEMS,
             payloadCardList:
@@ -1621,6 +1679,14 @@ export const getCustomerItemsAction = () => async (dispatch, getState) => {
         }
       })
       .catch(function (error) {
+        if (
+          error &&
+          error.message &&
+          error.message.includes("Request failed with status code 401")
+        ) {
+          dispatch(prodcutDataLogOut());
+        }
+
         dispatch({
           type: GET_CUSTOMER_ITEMS_ERROR,
           payload: "server response failed",

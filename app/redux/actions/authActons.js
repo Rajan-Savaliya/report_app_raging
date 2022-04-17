@@ -139,19 +139,15 @@ export const signInAction =
       data: data,
     };
 
-    console.log("Request Going To be send ====>>>>>>");
-
     axios(config)
       .then(function (response) {
         var serverResponse = response;
-        debugger;
         if (
           serverResponse &&
           serverResponse.data &&
           serverResponse.data.status
         ) {
           if (serverResponse.data.token) {
-            console.log("TOKEN ===>", response.data.token);
             let localUserObject = JSON.stringify(
               serverResponse.data.data ? serverResponse.data.data : ""
             );

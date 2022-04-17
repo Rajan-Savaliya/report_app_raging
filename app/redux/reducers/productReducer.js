@@ -1,5 +1,6 @@
 /* eslint-disable radix */
 import {
+  GET_FILTER_DATA,
   GET_PRODUCT_LIST,
   GET_PRODUCT_LOADING,
   GET_PRODUCT_ERROR,
@@ -89,9 +90,12 @@ import {
   LIKE_UNLIKE_DONE,
   LIKE_UNLIKE_LOADING,
   REMOVE_FROM_LIKE_LIST,
+  ADD_TO_WHISH_LIST_MODAL,
 } from "../actions/types";
 
 const initialState = {
+  whishListModalShow: false,
+  whishListCustomerId: "",
   likeUnlikeLoading: false,
   maxDebit: false,
   maxDays: false,
@@ -182,10 +186,32 @@ const initialState = {
   oneTimeReportsLoading: false,
   oneTimeReports: [],
   customerFullData: null,
+  filterReportList: [],
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case GET_FILTER_DATA:
+      return {
+        ...state,
+        filterReportList: state.cardItems.filter(
+          (itemValue) =>
+            itemValue.customer_name &&
+            itemValue.customer_name
+              .toUpperCase()
+              .indexOf(
+                action.payloadSearchText
+                  ? action.payloadSearchText.toUpperCase()
+                  : ""
+              ) > -1
+        ),
+      };
+    case ADD_TO_WHISH_LIST_MODAL:
+      return {
+        ...state,
+        whishListModalShow: action.payloadShow,
+        whishListCustomerId: action.payloadId,
+      };
     case LIKE_UNLIKE_LOADING:
       return {
         ...state,
@@ -206,14 +232,11 @@ export default (state = initialState, action) => {
     case MAX_DEBIT_DATE:
       var listOfItem = false;
       if (action.payloadMaxDay) {
-        console.log("max day filter", state.totalCredit, state.totalDebit);
         var listOfItem = state.cardItems;
         listOfItem.sort(function compare(a, b) {
           return b.only_day - a.only_day;
         });
       } else if (action.payloadMaxDbit) {
-        console.log("max debit filter", state.totalCredit, state.totalDebit);
-
         var listOfItem = state.cardItems;
 
         listOfItem.sort(function compare(a, b) {
@@ -459,7 +482,6 @@ export default (state = initialState, action) => {
         // deliveryItems: [],
       };
     case GET_DELIVERY_ITEMS:
-      console.log(action.payload, "QQQQQQQQQQQ");
       return {
         ...state,
         deliveryItemsError: null,
@@ -569,7 +591,6 @@ export default (state = initialState, action) => {
         // customerItems: [],
       };
     case GET_CUSTOMER_ITEMS:
-      console.log(action.payloadCardList, "reducer customerList data");
       return {
         ...state,
         customerItemsError: null,

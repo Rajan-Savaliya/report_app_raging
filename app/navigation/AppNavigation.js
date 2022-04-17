@@ -28,7 +28,7 @@ import AuthCard from "../modules/AuthCard/AuthCard";
 import Payment from "../modules/Payment/Payment";
 
 import PdfView from "../modules/PdfView/PdfView";
-
+import WhishList from "../modules/WhishList/WhishList";
 import {
   getCustomerItemsAction,
   getCardItemsAction,
@@ -42,12 +42,11 @@ const AppNavigation = () => {
   const { bgColorset } = useSelector((state) => state.themeState);
   const { userToken } = useSelector((state) => state.authState);
 
-  console.log(userToken, "UserToken");
   useEffect(() => {
     if (userToken) {
-      // dispatch(getCustomerItemsAction());
+      dispatch(getCustomerItemsAction());
       dispatch(getCardItemsAction());
-      // dispatch(getWhisListData());
+      dispatch(getWhisListData());
     }
   }, [userToken]);
 
@@ -71,6 +70,14 @@ const AppNavigation = () => {
             <Stack.Screen
               name="Home"
               component={Home}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: NavigationAnimationType,
+              }}
+            />
+            <Stack.Screen
+              name="WhishList"
+              component={WhishList}
               options={{
                 headerShown: false,
                 cardStyleInterpolator: NavigationAnimationType,

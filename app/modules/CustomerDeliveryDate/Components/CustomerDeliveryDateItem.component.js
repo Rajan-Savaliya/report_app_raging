@@ -8,6 +8,16 @@ import { setDeliveryStatus } from "../../../redux/actions/productActions";
 
 const DeliveryItem = ({ item, navigation }) => {
   const dispatch = useDispatch();
+  const bgColorSet =
+    item.type == "sale_invoice"
+      ? "#f5f5f5"
+      : item.type == "Closing Balance"
+      ? "#d6fffb"
+      : item.type == "receipt"
+      ? "#faefcf"
+      : item.type == "payment"
+      ? "#fce3e5"
+      : "#f5f5f5";
   return (
     <View
       style={{
@@ -27,7 +37,7 @@ const DeliveryItem = ({ item, navigation }) => {
       <View
         style={{
           borderRadius: 10,
-          backgroundColor: "#FFFFFF",
+          backgroundColor: bgColorSet,
         }}
       >
         <View

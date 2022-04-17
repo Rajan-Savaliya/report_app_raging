@@ -154,9 +154,6 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
             ? endDate.split("-").reverse().join("-")
             : Moment().format("YYYY-MM-DD");
 
-          console.log(
-            `https://nt.dhyatiktok.com/ntapi/home/get_account_ledger_pdf/${stateSelectionDate}/${endSelectionDate}/${customerIdForRequest}`
-          );
           navigation.navigate("PdfView", {
             item: {},
             pdfUrl: `https://nt.dhyatiktok.com/ntapi/home/get_account_ledger_pdf/${stateSelectionDate}/${endSelectionDate}/${customerIdForRequest}`,
@@ -190,7 +187,7 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
         </View>
         <View>
           <DropDownPicker
-            placeholder="Select Service"
+            placeholder="Select Customer"
             listMode="SCROLLVIEW"
             scrollViewProps={{
               nestedScrollEnabled: true,

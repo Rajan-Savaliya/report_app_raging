@@ -79,10 +79,18 @@ like add and remove set kari: method + api thi:
 Task:
 
 // like item get kari show karvani che: 30min
-// add mate modal open karvanu che: 30min
+//------------ add mate modal open karvanu che: 30min
 // whish list and diff list color diff check karvano
 [whish now day product and all diff type customer list]
 // token invalida request send karvani che:
 // test kari build kari send karvanu che:
 
-// 2 hours done thai jai ok ok:
+        if (
+          response.data &&
+          response.data.status == false &&
+          response.data.message.includes("Unauthorized")
+        ) {
+          dispatch(prodcutDataLogOut());
+        }
+
+// 1. token log out
