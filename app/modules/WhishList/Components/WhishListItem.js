@@ -160,7 +160,7 @@ const WhishListItem = ({ item, navigation }) => {
         backgroundColor:
           item.date && item.date == Moment().format("YYYY-MM-DD")
             ? "#faf3de"
-            : "#f5f5f5",
+            : "#dddddd",
       }}
     >
       <View style={{ flexDirection: "row", elevation: 1 }}>

@@ -94,3 +94,17 @@ Task:
         }
 
 // 1. token log out
+
+
+
+CSS/
+---JS/
+---HTML/
+---Reactjs/
+JSON/
+MYSQL/
+NOSql/
+node.js/
+resetapi/
+Jqury/
+font-end development/

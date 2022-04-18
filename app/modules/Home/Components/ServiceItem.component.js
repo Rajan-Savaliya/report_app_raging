@@ -206,7 +206,7 @@ const ServiceItem = ({ item, navigation }) => {
         shadowRadius: 2,
         elevation: 3,
         overflow: "hidden",
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "#dddddd",
       }}
     >
       <View style={{ flexDirection: "row", elevation: 1 }}>

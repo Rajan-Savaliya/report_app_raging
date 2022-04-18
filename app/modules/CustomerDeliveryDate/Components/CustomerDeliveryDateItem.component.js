@@ -10,7 +10,7 @@ const DeliveryItem = ({ item, navigation }) => {
   const dispatch = useDispatch();
   const bgColorSet =
     item.type == "sale_invoice"
-      ? "#f5f5f5"
+      ? "#dddddd"
       : item.type == "Closing Balance"
       ? "#d6fffb"
       : item.type == "receipt"
