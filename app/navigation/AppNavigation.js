@@ -27,12 +27,15 @@ import AuthCard from "../modules/AuthCard/AuthCard";
 
 import Payment from "../modules/Payment/Payment";
 
+import SaleReport from "../modules/SaleReport/SaleReport";
+
 import PdfView from "../modules/PdfView/PdfView";
 import WhishList from "../modules/WhishList/WhishList";
 import {
   getCustomerItemsAction,
   getCardItemsAction,
   getWhisListData,
+  getGroupItemAction,
 } from "../redux/actions/productActions";
 
 const Stack = createStackNavigator();
@@ -42,11 +45,14 @@ const AppNavigation = () => {
   const { bgColorset } = useSelector((state) => state.themeState);
   const { userToken } = useSelector((state) => state.authState);
 
+  // console.log(userToken);
+
   useEffect(() => {
     if (userToken) {
       dispatch(getCustomerItemsAction());
       dispatch(getCardItemsAction());
       dispatch(getWhisListData());
+      dispatch(getGroupItemAction());
     }
   }, [userToken]);
 
@@ -87,6 +93,15 @@ const AppNavigation = () => {
             <Stack.Screen
               name="PdfView"
               component={PdfView}
+              options={{
+                headerShown: false,
+                cardStyleInterpolator: NavigationAnimationType,
+              }}
+            />
+
+            <Stack.Screen
+              name="SaleReport"
+              component={SaleReport}
               options={{
                 headerShown: false,
                 cardStyleInterpolator: NavigationAnimationType,

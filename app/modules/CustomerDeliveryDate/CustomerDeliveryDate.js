@@ -44,7 +44,9 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
     customerFullData,
   } = useSelector((state) => state.productState);
 
-  const [stateDate, setStateDate] = useState(null);
+  const [stateDate, setStateDate] = useState(
+    Moment().startOf("month").format("DD-MM-YYYY")
+  );
 
   const [endDate, setEndDate] = useState(Moment().format("DD-MM-YYYY"));
 
@@ -109,7 +111,7 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
 
     const stateSelectionDate = stateDate
       ? stateDate.split("-").reverse().join("-")
-      : "";
+      : Moment().format("YYYY-MM-DD");
     const endSelectionDate = endDate
       ? endDate.split("-").reverse().join("-")
       : Moment().format("YYYY-MM-DD");
@@ -632,12 +634,12 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
                 />
               </View>
             )}
-            removeClippedSubviews={true}
-            maxToRenderPerBatch={15} // 5
-            updateCellsBatchingPeriod={5} // 50
-            initialNumToRender={10} // 3
-            windowSize={5} // 5
-            legacyImplementation={true}
+            // removeClippedSubviews={true}
+            // maxToRenderPerBatch={15} // 5
+            // updateCellsBatchingPeriod={5} // 50
+            // initialNumToRender={10} // 3
+            // windowSize={5} // 5
+            // legacyImplementation={true}
             data={customerDateDeliveryDetailsList}
             renderItem={renderCardItem}
             contentContainerStyle={{

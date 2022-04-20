@@ -6,7 +6,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 import { setDeliveryStatus } from "../../../redux/actions/productActions";
 
-const DeliveryItem = ({ item, navigation }) => {
+const SaleItem = ({ item, navigation }) => {
   const dispatch = useDispatch();
   const bgColorSet =
     item.type == "sale_invoice"
@@ -37,7 +37,7 @@ const DeliveryItem = ({ item, navigation }) => {
       <View
         style={{
           borderRadius: 10,
-          backgroundColor: bgColorSet,
+          backgroundColor: "#dddddd",
         }}
       >
         <View
@@ -53,56 +53,53 @@ const DeliveryItem = ({ item, navigation }) => {
               <View style={{ marginLeft: 6 }}>
                 <View>
                   <Text style={{ color: "#1845B2", fontSize: 17 }}>
-                    {item.type ? item.type : ""}
+                    {item.customer ? item.customer : ""}
                   </Text>
                 </View>
                 <View>
                   <Text adjustsFontSizeToFit minimumFontScale={0.8}>
-                    note: {item.note ? item.note : "-"}
+                    Bill Number: {item.bill_no ? item.bill_no : "-"}
                   </Text>
                 </View>
-                <View style={{ marginTop: 5 }}>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      color: "#26c957",
-                      flex: 0.5,
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    Credit:{"  "}
-                    {item.credit || item.credit == 0 ? item.credit : "-"}
-                  </Text>
-                </View>
-
-                <View style={{}}>
-                  <Text
-                    style={{
-                      fontSize: 15,
-                      color: "#ff3636",
-                      flex: 0.5,
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    Debit:{"  "}
-                    {item.debit || item.debit == 0 ? ` ${item.debit}` : " -"}
-                  </Text>
-                </View>
+                {item.cash_party_name ? (
+                  <View style={{ marginVertical: 7 }}>
+                    <Text
+                      style={{
+                        fontSize: 17.5,
+                        color: "#ffac12",
+                        flex: 0.5,
+                        flexWrap: "wrap",
+                        fontWeight: "normal",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "#ffac12",
+                          fontWeight: "normal",
+                          fontSize: 14.5,
+                        }}
+                      >
+                        Cash party name :{" "}
+                      </Text>
+                      {item.cash_party_name ? `\n${item.cash_party_name}` : "-"}
+                    </Text>
+                  </View>
+                ) : (
+                  <View style={{ marginVertical: 3 }} />
+                )}
 
                 <View>
                   <Text
                     adjustsFontSizeToFit
                     minimumFontScale={0.8}
                     style={{
-                      color: "#cf9a1d",
+                      color: "#cf0f08",
                       fontSize: 18,
                       fontWeight: "bold",
                     }}
                   >
                     Total:
-                    {item.balance || item.balance == 0
-                      ? ` ${item.balance}`
-                      : " -"}
+                    {item.total || item.total == 0 ? ` ${item.total}` : " -"}
                   </Text>
                 </View>
               </View>
@@ -114,12 +111,13 @@ const DeliveryItem = ({ item, navigation }) => {
                 }}
               ></View>
               <View style={{ marginRight: 7, marginLeft: 3 }}>
-                <View style={{}}>
-                  <Text style={{ textAlign: "right", color: "#808080" }}>
-                    Invoice: {item.invoice ? item.invoice : "-"}
-                  </Text>
-                </View>
-
+                {item.qty || item.qty == 0 ? (
+                  <View style={{}}>
+                    <Text style={{ textAlign: "right", color: "#808080" }}>
+                      Qty: {item.qty || item.qty == 0 ? item.qty : "-"}
+                    </Text>
+                  </View>
+                ) : null}
                 <View style={{}}>
                   <Text
                     style={{
@@ -137,12 +135,12 @@ const DeliveryItem = ({ item, navigation }) => {
           </View>
         </View>
       </View>
-      {item.is_pdf && item.invoice ? (
+      {item.invoice_id ? (
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("PdfView", {
               item: {},
-              pdfUrl: `https://nt.dhyatiktok.com/ntapi/home/get_sales_pdf/${item.invoice}`,
+              pdfUrl: `https://nt.dhyatiktok.com/ntapi/home/get_sales_pdf/${item.invoice_id}`,
             });
 
             // callThePersonAction();
@@ -179,4 +177,4 @@ const DeliveryItem = ({ item, navigation }) => {
   );
 };
 
-export default memo(DeliveryItem);
+export default memo(SaleItem);

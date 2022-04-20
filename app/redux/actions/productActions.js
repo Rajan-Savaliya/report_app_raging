@@ -93,6 +93,12 @@ import {
   REMOVE_FROM_LIKE_LIST,
   ADD_TO_WHISH_LIST_MODAL,
   GET_FILTER_DATA,
+  GET_GROUP_ITEMS,
+  GET_GROUP_ERROR,
+  GET_GROUP_LOADING,
+  SALES_DETAILS_LOADING,
+  SALES_DETAILS_ERROR,
+  SALES_DETAILS_LIST,
 } from "./types";
 
 export const addWhishListModalAction =
@@ -1259,6 +1265,104 @@ export const customerDeliveryDetailByID =
       });
   };
 
+export const saleDeliveryDetailByID =
+  (stateDate = "", endDate = "", GroupId = "") =>
+  (dispatch, getState) => {
+    dispatch({
+      type: SALES_DETAILS_LOADING,
+    });
+
+    const {
+      authState: { userToken },
+    } = getState();
+
+    var data = JSON.stringify({
+      from: stateDate,
+      to: endDate,
+      group_id: GroupId,
+    });
+
+    var config = {
+      method: "post",
+      url: "https://nt.dhyatiktok.com/ntapi/home/get_sales_report",
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    // myHeaders.append("Authorization", `Bearer ${userToken}`);
+
+    // var formdata = new FormData();
+    // formdata.append("start_date", stateDate);
+    // formdata.append("end_date", endDate);
+    // formdata.append("customer_id", customerId);
+
+    // var requestOptions = {
+    //   method: "POST",
+    //   headers: myHeaders,
+    //   body: formdata,
+    //   redirect: "follow",
+    // };
+
+    axios(config)
+      .then(function (response) {
+        if (
+          response.data &&
+          response.data.status == false &&
+          response.data.message.includes("Unauthorized")
+        ) {
+          dispatch(prodcutDataLogOut());
+        }
+        var serverReponseData = response.data;
+
+        if (serverReponseData && serverReponseData.status) {
+          dispatch({
+            type: SALES_DETAILS_LIST,
+            payload:
+              serverReponseData.data && Array.isArray(serverReponseData.data)
+                ? serverReponseData.data
+                : [],
+          });
+          Toast.show({
+            text1:
+              serverReponseData.data &&
+              Array.isArray(serverReponseData.data) &&
+              serverReponseData.data.length > 0
+                ? "Successfully get a sales report data"
+                : "No data found",
+            visibilityTime: 15000,
+            autoHide: true,
+            position: "bottom",
+            type: "success",
+          });
+        } else {
+          dispatch({
+            type: SALES_DETAILS_ERROR,
+            payload:
+              response.data && response.data.message
+                ? response.data.message
+                : "server response failed",
+          });
+        }
+      })
+      .catch((error) => {
+        if (
+          error &&
+          error.message &&
+          error.message.includes("Request failed with status code 401")
+        ) {
+          dispatch(prodcutDataLogOut());
+        }
+
+        dispatch({
+          type: SALES_DETAILS_ERROR,
+          payload: "server response failed",
+        });
+      });
+  };
+
 export const getCardItemsAction = () => async (dispatch, getState) => {
   dispatch({
     type: GET_CARD_ITEMS_LOADING,
@@ -1689,6 +1793,68 @@ export const getCustomerItemsAction = () => async (dispatch, getState) => {
 
         dispatch({
           type: GET_CUSTOMER_ITEMS_ERROR,
+          payload: "server response failed",
+        });
+      });
+  } catch (e) {}
+};
+
+export const getGroupItemAction = () => async (dispatch, getState) => {
+  dispatch({
+    type: GET_GROUP_LOADING,
+  });
+
+  try {
+    const {
+      authState: { userToken, userServiceType },
+    } = getState();
+
+    var config = {
+      method: "get",
+      url: "https://nt.dhyatiktok.com/ntapi/home/get_group",
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    };
+
+    axios(config)
+      .then(function (response) {
+        if (
+          response.data &&
+          response.data.status == false &&
+          response.data.message.includes("Unauthorized")
+        ) {
+          dispatch(prodcutDataLogOut());
+        }
+
+        if (response.data && response.data.group) {
+          dispatch({
+            type: GET_GROUP_ITEMS,
+            payloadGroupList:
+              response.data.group && Array.isArray(response.data.group)
+                ? response.data.group
+                : [],
+          });
+        } else {
+          dispatch({
+            type: GET_GROUP_ERROR,
+            payload: response.message
+              ? response.message
+              : "server response failed",
+          });
+        }
+      })
+      .catch(function (error) {
+        if (
+          error &&
+          error.message &&
+          error.message.includes("Request failed with status code 401")
+        ) {
+          dispatch(prodcutDataLogOut());
+        }
+
+        dispatch({
+          type: GET_GROUP_ERROR,
           payload: "server response failed",
         });
       });

@@ -1,3 +1,6 @@
+1>>POST MAN : https://www.getpostman.com/collections/fb9b3d6ecbd752966f70
+2>>user-pass: parth / 1234
+
 Re-enter new password:
 What is your first and last name?
 [Unknown]: rajan savaliya
@@ -95,8 +98,6 @@ Task:
 
 // 1. token log out
 
-
-
 CSS/
 ---JS/
 ---HTML/
@@ -108,3 +109,7 @@ node.js/
 resetapi/
 Jqury/
 font-end development/
+
+// Task: 2 point:
+
+create report type some page create karvanu che: right totaly right: simple as that: do it: company and done it: simple solution for that:

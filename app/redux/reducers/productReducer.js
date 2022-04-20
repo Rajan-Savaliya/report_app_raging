@@ -91,9 +91,21 @@ import {
   LIKE_UNLIKE_LOADING,
   REMOVE_FROM_LIKE_LIST,
   ADD_TO_WHISH_LIST_MODAL,
+  GET_GROUP_ITEMS,
+  GET_GROUP_ERROR,
+  GET_GROUP_LOADING,
+  SALES_DETAILS_LOADING,
+  SALES_DETAILS_ERROR,
+  SALES_DETAILS_LIST,
 } from "../actions/types";
 
 const initialState = {
+  saleDetailsLoading: false,
+  saleDetailsList: [],
+  saleDetailsError: null,
+  groupItems: [],
+  groupItemsError: null,
+  groupItemsLoading: false,
   whishListModalShow: false,
   whishListCustomerId: "",
   likeUnlikeLoading: false,
@@ -474,6 +486,29 @@ export default (state = initialState, action) => {
         customerDateDeliveryDetailsList: [],
       };
 
+    case SALES_DETAILS_LOADING:
+      return {
+        ...state,
+        saleDetailsLoading: true,
+        saleDetailsError: null,
+      };
+    case SALES_DETAILS_LIST:
+      return {
+        ...state,
+        saleDetailsError: null,
+        saleDetailsLoading: false,
+        saleDetailsList: action.payload,
+      };
+    case SALES_DETAILS_ERROR:
+      return {
+        ...state,
+        saleDetailsList: null,
+        saleDetailsLoading: false,
+        saleDetailsError: action.payload
+          ? action.payload
+          : "server response failed",
+      };
+
     case GET_DELIVERY_ITEMS_LOADING:
       return {
         ...state,
@@ -605,6 +640,30 @@ export default (state = initialState, action) => {
           ? action.payload
           : "server response failed",
         customerItems: [],
+      };
+
+    case GET_GROUP_LOADING:
+      return {
+        ...state,
+        groupItemsLoading: true,
+        groupItemsError: null,
+        // customerItems: [],
+      };
+    case GET_GROUP_ITEMS:
+      return {
+        ...state,
+        groupItemsError: null,
+        groupItemsLoading: false,
+        groupItems: action.payloadGroupList,
+      };
+    case GET_GROUP_ERROR:
+      return {
+        ...state,
+        groupItemsLoading: false,
+        groupItemsError: action.payload
+          ? action.payload
+          : "server response failed",
+        groupItems: [],
       };
 
     case ORDER_PDF_PAGE_HTML:

@@ -16,6 +16,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Keyboard,
+  Alert,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import FastImage from "react-native-fast-image";
@@ -37,9 +38,13 @@ import {
   reportItemSelection,
   getWhisListData,
   searchInputList,
+  getGroupItemAction,
+  saleDeliveryDetailByID,
 } from "../../redux/actions/productActions.js";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import Moment from "moment";
 
 import Spinner from "react-native-loading-spinner-overlay";
 
@@ -91,6 +96,7 @@ const Home = ({ navigation }) => {
     pendingDeliveryOrder,
     likeUnlikeLoading,
     filterReportList,
+    groupItems,
   } = useSelector((state) => state.productState);
 
   // useEffect(() => {
@@ -116,6 +122,10 @@ const Home = ({ navigation }) => {
     dispatch(getCardItemsAction());
     dispatch(getCustomerItemsAction());
     dispatch(getWhisListData());
+
+    if (Array.isArray(groupItems) && groupItems.length == 0) {
+      dispatch(getGroupItemAction());
+    }
 
     wait(1000).then(() => setRefreshing(false));
   };
@@ -161,18 +171,61 @@ const Home = ({ navigation }) => {
           flexDirection: "row",
         }}
       >
-        <TouchableOpacity
-          style={{ left: 15 }}
-          onPress={() => {
-            navigation.navigate("WhishList");
-          }}
-        >
-          <MaterialCommunityIcons
-            name="cards-heart"
-            size={25}
-            color="#FFFFFF"
-          />
-        </TouchableOpacity>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity
+            style={{ left: 15 }}
+            onPress={() => {
+              navigation.navigate("WhishList");
+            }}
+          >
+            <MaterialCommunityIcons
+              name="cards-heart"
+              size={25}
+              color="#FFFFFF"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ left: 40 }}
+            onPress={() => {
+              let groupSelectionList = [];
+
+              groupItems &&
+                groupItems.forEach((valueItemCustomer) => {
+                  groupSelectionList.push({
+                    label: valueItemCustomer.name,
+                    value: valueItemCustomer.name,
+                  });
+                });
+
+              dispatch(
+                saleDeliveryDetailByID(
+                  Moment().format("YYYY-MM-DD"),
+                  Moment().format("YYYY-MM-DD"),
+                  ""
+                )
+              );
+              // dispatch(
+              //   saleDeliveryDetailByID(
+              //     Moment().format("YYYY-MM-DD"),
+              //     Moment().format("YYYY-MM-DD"),
+              //     ""
+              //   )
+              // );
+
+              navigation.navigate("SaleReport", {
+                groupList: groupSelectionList,
+              });
+
+              // navigation.navigate("SaleReport");
+            }}
+          >
+            <FontAwesome5
+              name="file-invoice-dollar"
+              size={25}
+              color="#FFFFFF"
+            />
+          </TouchableOpacity>
+        </View>
 
         <View style={{}}>
           <Text style={{ fontSize: 24, fontWeight: "bold", color: "#FFFFFF" }}>
@@ -181,7 +234,19 @@ const Home = ({ navigation }) => {
         </View>
         <TouchableOpacity
           onPress={() => {
-            dispatch(prodcutDataLogOut());
+            Alert.alert("Sign Out", "Are you sure you want to sign out.", [
+              {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel",
+              },
+              {
+                text: "OK",
+                onPress: () => {
+                  dispatch(prodcutDataLogOut());
+                },
+              },
+            ]);
           }}
           style={{ left: -15 }}
         >

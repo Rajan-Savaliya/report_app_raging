@@ -182,7 +182,7 @@ const ServiceItem = ({ item, navigation }) => {
 
         dispatch(
           customerDeliveryDetailByID(
-            "",
+            Moment().startOf("month").format("YYYY-MM-DD"),
             Moment().format("YYYY-MM-DD"),
             item.customer_id ? item.customer_id : ""
           )
