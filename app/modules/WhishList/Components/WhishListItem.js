@@ -144,7 +144,7 @@ const WhishListItem = ({ item, navigation }) => {
         });
       }}
       style={{
-        paddingVertical: 10,
+        paddingVertical: 14,
         paddingTop: 10,
         marginTop: 10,
         marginHorizontal: 15,
@@ -168,7 +168,7 @@ const WhishListItem = ({ item, navigation }) => {
           style={{
             marginLeft: 10,
             justifyContent: "space-between",
-            flex: 0.8,
+            flex: 0.73,
           }}
         >
           <View style={{ marginBottom: 5 }}>
@@ -245,7 +245,7 @@ const WhishListItem = ({ item, navigation }) => {
           style={{
             marginLeft: 10,
             justifyContent: "space-between",
-            flex: 0.2,
+            flex: 0.27,
           }}
         >
           <View style={{ marginBottom: 5 }}>
@@ -256,15 +256,15 @@ const WhishListItem = ({ item, navigation }) => {
             >
               <Text
                 style={{
-                  fontSize: 13,
+                  fontSize: 12.5,
                   color: "#808080",
-                  flex: 0.2,
+                  flex: 0.27,
                   flexWrap: "wrap",
                   alignItems: "flex-end",
                   alignSelf: "flex-end",
                 }}
               >
-                {item.date ? item.date : ""}{" "}
+                {item.date ? item.date : ""}
               </Text>
             </View>
 
@@ -275,15 +275,15 @@ const WhishListItem = ({ item, navigation }) => {
             >
               <Text
                 style={{
-                  fontSize: 13,
+                  fontSize: 12.5,
                   color: "#808080",
-                  flex: 0.2,
+                  flex: 0.27,
                   flexWrap: "wrap",
                   alignItems: "flex-end",
                   alignSelf: "flex-end",
                 }}
               >
-                {item.days ? item.days : ""}{" "}
+                {item.days ? item.days : ""}
               </Text>
             </View>
           </View>
@@ -293,14 +293,6 @@ const WhishListItem = ({ item, navigation }) => {
       <TouchableOpacity
         onPress={() => {
           callThePersonAction();
-          // navigation.navigate("AddService", {
-          //   id: item.id,
-          //   name: item.name,
-          //   description: item.description,
-          //   price: item.price,
-          //   image: item.image,
-          //   update: true,
-          // });
         }}
         style={{
           zIndex: 5,
