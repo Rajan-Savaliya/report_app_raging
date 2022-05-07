@@ -144,8 +144,8 @@ export const addRemoveLikeItemsAction =
 
       const likeUnlikeUrl =
         type === "like"
-          ? "https://nt.dhyatiktok.com/ntapi/home/addwishlist"
-          : "https://nt.dhyatiktok.com/ntapi/home/removelist";
+          ? "http://nts.dhyaravi.com/ntapi/home/addwishlist"
+          : "http://nts.dhyaravi.com/ntapi/home/removelist";
 
       var config = {
         method: "post",
@@ -1193,7 +1193,7 @@ export const customerDeliveryDetailByID =
 
     var config = {
       method: "post",
-      url: "https://nt.dhyatiktok.com/ntapi/home/get_account_ledger",
+      url: "http://nts.dhyaravi.com/ntapi/home/get_account_ledger",
       headers: {
         Authorization: `Bearer ${userToken}`,
         "Content-Type": "application/json",
@@ -1284,7 +1284,7 @@ export const saleDeliveryDetailByID =
 
     var config = {
       method: "post",
-      url: "https://nt.dhyatiktok.com/ntapi/home/get_sales_report",
+      url: "http://nts.dhyaravi.com/ntapi/home/get_sales_report",
       headers: {
         Authorization: `Bearer ${userToken}`,
         "Content-Type": "application/json",
@@ -1376,7 +1376,7 @@ export const getCardItemsAction = () => async (dispatch, getState) => {
 
     var config = {
       method: "get",
-      url: "https://nt.dhyatiktok.com/ntapi/home/get_home_report",
+      url: "http://nts.dhyaravi.com/ntapi/home/get_home_report",
       headers: {
         Authorization: `Bearer ${userToken}`,
       },
@@ -1560,7 +1560,7 @@ export const getWhisListData = () => async (dispatch, getState) => {
 
     var config = {
       method: "get",
-      url: "https://nt.dhyatiktok.com/ntapi/home/whishlist",
+      url: "http://nts.dhyaravi.com/ntapi/home/whishlist",
       headers: {
         Authorization: `Bearer ${userToken}`,
       },
@@ -1749,7 +1749,7 @@ export const getCustomerItemsAction = () => async (dispatch, getState) => {
 
     var config = {
       method: "get",
-      url: "https://nt.dhyatiktok.com/ntapi/home/get_only_customer",
+      url: "http://nts.dhyaravi.com/ntapi/home/get_only_customer",
       headers: {
         Authorization: `Bearer ${userToken}`,
       },
@@ -1811,7 +1811,7 @@ export const getGroupItemAction = () => async (dispatch, getState) => {
 
     var config = {
       method: "get",
-      url: "https://nt.dhyatiktok.com/ntapi/home/get_group",
+      url: "http://nts.dhyaravi.com/ntapi/home/get_group",
       headers: {
         Authorization: `Bearer ${userToken}`,
       },

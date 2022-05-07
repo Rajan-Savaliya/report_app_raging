@@ -158,7 +158,7 @@ const CustomerDeliveryDate = ({ navigation, route }) => {
 
           navigation.navigate("PdfView", {
             item: {},
-            pdfUrl: `https://nt.dhyatiktok.com/ntapi/home/get_account_ledger_pdf/${stateSelectionDate}/${endSelectionDate}/${customerIdForRequest}`,
+            pdfUrl: `http://nts.dhyaravi.com/ntapi/home/get_account_ledger_pdf/${stateSelectionDate}/${endSelectionDate}/${customerIdForRequest}`,
           });
         }}
         righticonColor={"#4287f5"}

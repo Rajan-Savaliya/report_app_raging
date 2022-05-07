@@ -140,7 +140,7 @@ const SaleItem = ({ item, navigation }) => {
           onPress={() => {
             navigation.navigate("PdfView", {
               item: {},
-              pdfUrl: `https://nt.dhyatiktok.com/ntapi/home/get_sales_pdf/${item.invoice_id}`,
+              pdfUrl: `http://nts.dhyaravi.com/ntapi/home/get_sales_pdf/${item.invoice_id}`,
             });
 
             // callThePersonAction();

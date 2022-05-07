@@ -131,7 +131,7 @@ export const signInAction =
 
     var config = {
       method: "post",
-      url: "https://nt.dhyatiktok.com/ntapi/register/login",
+      url: "http://nts.dhyaravi.com/ntapi/register/login",
       headers: {
         Authorization: "Bearer thsJ4[pR3=bM5^gJ0]pS6.gI2$hV5*uSwq",
         "Content-Type": "application/json",

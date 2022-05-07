@@ -1,6 +1,8 @@
 1>>POST MAN : https://www.getpostman.com/collections/fb9b3d6ecbd752966f70
 2>>user-pass: parth / 1234
 
+Adb deive version:
+
 Re-enter new password:
 What is your first and last name?
 [Unknown]: rajan savaliya
